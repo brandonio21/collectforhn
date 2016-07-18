@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "399237334746",
+    "project_id": "collect-for-hacker-news"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399237334746:android:8f3e3f888fba6927",
+        "android_client_info": {
+          "package_name": "com.brandonio21.collectforhackernews"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDHRnCudDIMt0lbxRGByOvuentzTqHayo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
