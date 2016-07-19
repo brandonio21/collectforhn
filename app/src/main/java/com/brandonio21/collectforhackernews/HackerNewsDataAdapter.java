@@ -17,12 +17,15 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by brandon on 7/17/16.
  */
 public class HackerNewsDataAdapter extends RecyclerView.Adapter<HackerNewsDataAdapter.ViewHolder> {
     private ArrayList<HackerNewsItem> dataset;
+    private Map<Integer, Integer> idToIndexMap;
     private ValueEventListener dataChangeListener;
     private Firebase rootFirebase;
     private Context parentContext;
@@ -39,6 +42,7 @@ public class HackerNewsDataAdapter extends RecyclerView.Adapter<HackerNewsDataAd
     public HackerNewsDataAdapter(Firebase rootFirebaseConnection,
                                  Context parentContext) {
         this.dataset = new ArrayList<HackerNewsItem>();
+        this.idToIndexMap = new HashMap<Integer, Integer>();
         this.rootFirebase = rootFirebaseConnection;
         this.parentContext = parentContext;
 
@@ -70,6 +74,8 @@ public class HackerNewsDataAdapter extends RecyclerView.Adapter<HackerNewsDataAd
                             HackerNewsItem newsItem = dataSnapshot.getValue(HackerNewsItem.class);
 
                             dataset.add(newsItem);
+                            idToIndexMap.put(newsItem.getId(), dataset.size()-1);
+                            notifyItemInserted(dataset.size()-1);
                         }
 
                         @Override
@@ -79,7 +85,6 @@ public class HackerNewsDataAdapter extends RecyclerView.Adapter<HackerNewsDataAd
                     }
             );
         }
-        notifyDataSetChanged();
     }
 
     @Override
@@ -96,18 +101,9 @@ public class HackerNewsDataAdapter extends RecyclerView.Adapter<HackerNewsDataAd
     public void onBindViewHolder(final ViewHolder holder, int position) {
         /* Build the actual item */
         final HackerNewsItem itemOfInterest = dataset.get(position);
-        TextView cardTitle = (TextView) holder.viewHolderCardView.findViewById(R.id.news_item_title);
-        cardTitle.setText(itemOfInterest.getTitle());
-
-        /* Set the click to go to the comments section */
-        cardTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent goToCommentsIntent = new Intent(parentContext, CommentViewerActivity.class);
-                goToCommentsIntent.putExtra("item", itemOfInterest);
-                parentContext.startActivity(goToCommentsIntent);
-            }
-        });
+        NewsListItemCardBuilder cardBuilder = new NewsListItemCardBuilder(holder.viewHolderCardView,
+                parentContext);
+        cardBuilder.BuildItemCard(itemOfInterest);
     }
 
     @Override
