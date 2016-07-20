@@ -71,11 +71,12 @@ public class NewsViewerWithDrawer extends AppCompatActivity
         //TODO: Move "topstories" into a var
         //TODO: Abstract firebase into a "item retriever" interface
         final Firebase hackerNewsRootFirebase = new Firebase("https://hacker-news.firebaseio.com/v0");
-        HackerNewsDataAdapter dataAdapter = new HackerNewsDataAdapter(hackerNewsRootFirebase, this);
+        HackerNewsDataAdapter topListDataAdapter = new HackerNewsDataAdapter(hackerNewsRootFirebase, this,
+                new NewsListItemCardBuilder(this), R.layout.activity_news_item);
         hackerNewsRootFirebase.child("topstories").addValueEventListener(
-                dataAdapter.getDataChangeListener());
+                topListDataAdapter.getDataChangeListener());
 
-        return  dataAdapter;
+        return  topListDataAdapter;
     }
 
     @Override

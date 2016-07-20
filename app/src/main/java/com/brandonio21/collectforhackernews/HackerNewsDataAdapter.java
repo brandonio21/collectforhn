@@ -28,7 +28,9 @@ public class HackerNewsDataAdapter extends RecyclerView.Adapter<HackerNewsDataAd
     private Map<Integer, Integer> idToIndexMap;
     private ValueEventListener dataChangeListener;
     private Firebase rootFirebase;
+    private HackerNewsCardBuilder cardBuilder;
     private Context parentContext;
+    private int itemLayoutId;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public CardView viewHolderCardView;
@@ -40,11 +42,16 @@ public class HackerNewsDataAdapter extends RecyclerView.Adapter<HackerNewsDataAd
     }
 
     public HackerNewsDataAdapter(Firebase rootFirebaseConnection,
-                                 Context parentContext) {
+                                 Context parentContext,
+                                 HackerNewsCardBuilder cardBuilder,
+                                 int itemLayoutId) {
+
         this.dataset = new ArrayList<HackerNewsItem>();
         this.idToIndexMap = new HashMap<Integer, Integer>();
         this.rootFirebase = rootFirebaseConnection;
         this.parentContext = parentContext;
+        this.cardBuilder = cardBuilder;
+        this.itemLayoutId = itemLayoutId;
 
         this.dataChangeListener = new ValueEventListener() {
             @Override
@@ -63,11 +70,9 @@ public class HackerNewsDataAdapter extends RecyclerView.Adapter<HackerNewsDataAd
         return this.dataChangeListener;
     }
 
-
-    public void handleTopStoriesDataSnapshotChange(DataSnapshot newShapshot) {
-        int[] topStoryIds = newShapshot.getValue(int[].class);
-        for (int topStoryId : topStoryIds) {
-            this.rootFirebase.child("item").child(Integer.toString(topStoryId)).addValueEventListener(
+    public void handleDataChange(int[] dataItemIds) {
+        for (int dataItemId : dataItemIds) {
+            this.rootFirebase.child("item").child(Integer.toString(dataItemId)).addValueEventListener(
                     new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -87,10 +92,15 @@ public class HackerNewsDataAdapter extends RecyclerView.Adapter<HackerNewsDataAd
         }
     }
 
+    public void handleTopStoriesDataSnapshotChange(DataSnapshot newShapshot) {
+        int[] dataItemIds = newShapshot.getValue(int[].class);
+        this.handleDataChange(dataItemIds);
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         CardView v = (CardView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_news_item, parent, false);
+                .inflate(itemLayoutId, parent, false);
 
 
         ViewHolder viewHolder = new ViewHolder(v);
@@ -102,9 +112,7 @@ public class HackerNewsDataAdapter extends RecyclerView.Adapter<HackerNewsDataAd
         /* Build the actual item */
         // TODO: Design a reusable NewsListItemCardBuilder so that a new one doesnt have to constantly be constructed
         final HackerNewsItem itemOfInterest = dataset.get(position);
-        NewsListItemCardBuilder cardBuilder = new NewsListItemCardBuilder(holder.viewHolderCardView,
-                parentContext);
-        cardBuilder.BuildItemCard(itemOfInterest);
+        this.cardBuilder.BuildItemCard(itemOfInterest, holder.viewHolderCardView);
     }
 
     @Override

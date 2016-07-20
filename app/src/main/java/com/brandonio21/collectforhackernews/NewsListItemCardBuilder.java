@@ -10,11 +10,11 @@ import com.brandonio21.collectforhackernews.model.HackerNewsItem;
 /**
  * Created by brandon on 7/18/16.
  */
-public class NewsListItemCardBuilder extends StandardItemCardBuilder {
+public class NewsListItemCardBuilder extends NewsItemCardBuilder {
     private Context parentContext;
 
-    public NewsListItemCardBuilder(View view, Context parentContext) {
-        super(view);
+    public NewsListItemCardBuilder(Context parentContext) {
+        super();
         this.parentContext = parentContext;
 
         this.addBuildStep(new AddClickabilityToTitleStep());
@@ -23,7 +23,7 @@ public class NewsListItemCardBuilder extends StandardItemCardBuilder {
     class AddClickabilityToTitleStep implements ItemCardPopulatorBuildStep {
 
         @Override
-        public void PerformStep(final HackerNewsItem item) {
+        public void PerformStep(final HackerNewsItem item, View view) {
             TextView cardTitle = (TextView) view.findViewById(R.id.news_item_title);
             /* Set the click to go to the comments section */
             cardTitle.setOnClickListener(new View.OnClickListener() {

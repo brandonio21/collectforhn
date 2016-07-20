@@ -40,9 +40,9 @@
                 </ImageView>
 
                 <TextView
+                    android:id="@+id/news_item_url_title"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="PREVIEW">
+                    android:layout_height="match_parent">
                 </TextView>
 
             </LinearLayout>
