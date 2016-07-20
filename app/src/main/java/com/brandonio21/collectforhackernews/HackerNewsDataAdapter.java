@@ -100,6 +100,7 @@ public class HackerNewsDataAdapter extends RecyclerView.Adapter<HackerNewsDataAd
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         /* Build the actual item */
+        // TODO: Design a reusable NewsListItemCardBuilder so that a new one doesnt have to constantly be constructed
         final HackerNewsItem itemOfInterest = dataset.get(position);
         NewsListItemCardBuilder cardBuilder = new NewsListItemCardBuilder(holder.viewHolderCardView,
                 parentContext);
